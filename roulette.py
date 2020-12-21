@@ -1,5 +1,6 @@
 import sqlite3 as sql
 import roulette_db as db
+import menu
 
 TABLE = {0: ['0'],
          32: ['32', 'red', '2-row', '3rd', 'even', '19-'],
@@ -128,6 +129,9 @@ def get_users():
         except ValueError:
             print('!!! Wrong int')
             continue
+        except KeyboardInterrupt:
+            menu.debug_menu(user, users)
+            continue
         user.add_bet(num_bet, mon_bet)
         if user.name not in [u.name for u in users]:
             users.append(user)
@@ -174,7 +178,7 @@ def get_winners(users):
 
     print()
     print('-'*70)
-    print('{:^20}|{:^20}|{:^20}|{:^10}'.format('User', 'Bets', 'Won', 'Total'))
+    print('{:^20}|{:^20}|{:^20}|{:^10} '.format('User', 'Bets', 'Won', 'Total'))
     print('-' * 70)
     for u in users:
         for bet in u.bets:
@@ -221,9 +225,10 @@ def game():
         res = str(u.total_game())
         print('{:<20}|{:<10}|{:<10}|{:<10}'.format(u.name[:20], str(u.total_wins), str(u.total_lose), res))
     print('-'*50)
+    main_menu()
 
 
-def menu():
+def main_menu():
     print('-'*30)
     print('ROULETTE: SHIKME EDITION')
     print('-' * 30)
@@ -231,3 +236,16 @@ def menu():
     print('2. Check DB')
     print('3. Exit')
     print('-' * 30)
+    choice = menu.get_choice(3)
+    if choice == 1:
+        game()
+    elif choice == 2:
+        print('WIP')
+        main_menu()
+    elif choice == 3:
+        quit()
+    else:
+        main_menu()
+
+
+main_menu()
