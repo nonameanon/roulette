@@ -15,8 +15,11 @@ def get_choice(max_val):
 def debug_menu(user=None, users=None):
     def edit_user(user):
         print(f'1. Name: {user.name}')
-        print(f'2. Bets: {user.bets}')
-        choice = get_choice(2)
+        if user.bets:
+            print(f'2. Bets: {user.bets}')
+            choice = get_choice(2)
+        else:
+            choice = get_choice(1)
         if choice == 1:
             name = input('New name >> ')
             user.name = name

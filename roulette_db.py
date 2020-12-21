@@ -32,7 +32,7 @@ def create_user(name):
               f"SecondHalfBets, EvenBets, OddBets, ZeroBets, FRowBets, SRowBets, TRowBets, "
               f"FColBets, SColBets, TColBets) VALUES ('{name}', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)")
     db.commit()
-    print(f"<< User '{name}' is created >>")
+    # print(f"<< User '{name}' is created >>")
 
 
 def find_user(name):
@@ -40,8 +40,7 @@ def find_user(name):
         c.execute(f"SELECT * FROM users WHERE Name = '{name}'")
         if c.fetchone() is None:
             create_user(name)
-        else:
-            print(f"<< User '{name}' found on database >>")
+            # print(f"<< User '{name}' found on database >>")
     except sql.OperationalError:
         create_user(name)
 
@@ -58,57 +57,65 @@ def update_value(name, attr, value):
             print(f'<< Num is int: {num}>>')
             if num == 0:
                 c.execute(f"UPDATE users SET ZeroBets = ZeroBets + 1 WHERE Name = '{name}'")
+            elif value == '-18':
+                c.execute(f"UPDATE users SET FirtsHalfBets = FirtsHalfBets + 1 WHERE Name = '{name}'")
             else:
                 c.execute(f"UPDATE users SET NumBets = NumBets + 1 WHERE Name = '{name}'")
+            db.commit()
         except ValueError:
             print(f'<< Num is str: {value}>>')
-            if attr == 'red':
+            print('current value is', value)
+            if value == 'red':
                 c.execute(f"UPDATE users SET RedBets = RedBets + 1 WHERE Name = '{name}'")
-            elif attr == 'black':
+            elif value == 'black':
                 c.execute(f"UPDATE users SET BlackBets = BlackBets + 1 WHERE Name = '{name}'")
-            elif attr == 'even':
+            elif value == 'even':
                 c.execute(f"UPDATE users SET EvenBets = EvenBets + 1 WHERE Name = '{name}'")
-            elif attr == 'odd':
+            elif value == 'odd':
                 c.execute(f"UPDATE users SET OddBets = OddBets + 1 WHERE Name = '{name}'")
-            elif attr == '-18':
-                c.execute(f"UPDATE users SET FirtsHalfBets = FirtsHalfBets + 1 WHERE Name = '{name}'")
-            elif attr == '19-':
+            elif value == '19-':
                 c.execute(f"UPDATE users SET SecondHalfBets = SecondHalfBets + 1 WHERE Name = '{name}'")
-            elif attr == '1-row':
+            elif value == '1-row':
                 c.execute(f"UPDATE users SET FRowBets = FRowBets + 1 WHERE Name = '{name}'")
-            elif attr == '2-row':
+            elif value == '2-row':
                 c.execute(f"UPDATE users SET SRowBets = SRowBets + 1 WHERE Name = '{name}'")
-            elif attr == '3-row':
+            elif value == '3-row':
                 c.execute(f"UPDATE users SET TRowBets = TRowBets + 1 WHERE Name = '{name}'")
-            elif attr == '1st':
+            elif value == '1st':
                 c.execute(f"UPDATE users SET FColBets = FColBets + 1 WHERE Name = '{name}'")
-            elif attr == '2nd':
+            elif value == '2nd':
                 c.execute(f"UPDATE users SET SColBets = SColBets + 1 WHERE Name = '{name}'")
-            elif attr == '3rd':
+            elif value == '3rd':
                 c.execute(f"UPDATE users SET TColBets = TColBets + 1 WHERE Name = '{name}'")
+            print('value setted')
+            db.commit()
     else:
         c.execute(f"UPDATE users SET {attr} = {attr} + {value} WHERE Name = '{name}'")
+    db.commit()
 
 
 def sql_shell():
     while True:
-        command = input('SQL >> ')
-        if command.startswith('fetch'):
-            command = command.split(' ')
-            if command[0] == 'fetchall':
-                if len(command) > 1:
-                    print(c.fetchall()[int(command[1])])
-                else:
-                    for line in c.fetchall():
-                        print(line)
-            elif command[0] == 'fetchone':
-                print(c.fetchone())
-        elif command.startswith('commit'):
-            db.commit()
-        elif command == 'quit':
-            return
-        else:
-            c.execute(f'{command}')
+        try:
+            command = input('SQL >> ')
+            if command.startswith('fetch'):
+                command = command.split(' ')
+                if command[0] == 'fetchall':
+                    if len(command) > 1:
+                        print(c.fetchall()[int(command[1])])
+                    else:
+                        for line in c.fetchall():
+                            print(line)
+                elif command[0] == 'fetchone':
+                    print(c.fetchone())
+            elif command.startswith('commit'):
+                db.commit()
+            elif command == 'quit' or command == 'exit':
+                return
+            else:
+                c.execute(f'{command}')
+        except sql.OperationalError:
+            print('!!! Wrong command')
 
 
 # c.execute(f"UPDATE users SET MoneyBetted = MoneyBetted + {user.total_lose}, MoneyWon = MoneyWon + {user.total_wins}")

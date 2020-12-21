@@ -89,11 +89,12 @@ class User:
         db.update_value(self.name, 'num', num)
 
     def total_round(self):
-        res = 0
-        for i in self.bets.values():
-            res += i
-        self.total_wins += res
-        return res
+        return sum(list(self.bets.values()))
+        # res = 0
+        # for i in self.bets.values():
+        #     res += i
+        # self.total_wins += res
+        # return res
 
     def total_game(self):
         res = self.total_wins+self.total_lose
@@ -201,6 +202,7 @@ def get_winners(users):
     print('-'*70)
     print('Победители: ')
     for winner in winners:
+        winner.total_wins += winner.total_round()
         print(f'{winner.name}: {winner.total_round()}')
 
     for u in users:
