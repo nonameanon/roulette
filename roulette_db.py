@@ -27,6 +27,10 @@ db = sql.connect('roulette.db')
 c = db.cursor()
 
 
+def create_table():
+    pass
+
+
 def create_user(name):
     c.execute(f"INSERT INTO users (Name, MoneyBetted, MoneyWon, NumBets, BlackBets, RedBets, FirtsHalfBets, "
               f"SecondHalfBets, EvenBets, OddBets, ZeroBets, FRowBets, SRowBets, TRowBets, "
@@ -54,7 +58,7 @@ def update_value(name, attr, value):
     if attr == 'num':
         try:
             num = int(value)
-            print(f'<< Num is int: {num}>>')
+            # print(f'<< Num is int: {num}>>')
             if num == 0:
                 c.execute(f"UPDATE users SET ZeroBets = ZeroBets + 1 WHERE Name = '{name}'")
             elif value == '-18':
@@ -63,8 +67,8 @@ def update_value(name, attr, value):
                 c.execute(f"UPDATE users SET NumBets = NumBets + 1 WHERE Name = '{name}'")
             db.commit()
         except ValueError:
-            print(f'<< Num is str: {value}>>')
-            print('current value is', value)
+            # print(f'<< Num is str: {value}>>')
+            # print('current value is', value)
             if value == 'red':
                 c.execute(f"UPDATE users SET RedBets = RedBets + 1 WHERE Name = '{name}'")
             elif value == 'black':
@@ -87,7 +91,7 @@ def update_value(name, attr, value):
                 c.execute(f"UPDATE users SET SColBets = SColBets + 1 WHERE Name = '{name}'")
             elif value == '3rd':
                 c.execute(f"UPDATE users SET TColBets = TColBets + 1 WHERE Name = '{name}'")
-            print('value setted')
+            # print('value setted')
             db.commit()
     else:
         c.execute(f"UPDATE users SET {attr} = {attr} + {value} WHERE Name = '{name}'")

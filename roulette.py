@@ -1,6 +1,6 @@
-import sqlite3 as sql
 import roulette_db as db
 import menu
+from random import randint, choice, randrange
 
 TABLE = {0: ['0'],
          32: ['32', 'red', '2-row', '3rd', 'even', '19-'],
@@ -90,18 +90,10 @@ class User:
 
     def total_round(self):
         return sum(list(self.bets.values()))
-        # res = 0
-        # for i in self.bets.values():
-        #     res += i
-        # self.total_wins += res
-        # return res
 
     def total_game(self):
         res = self.total_wins+self.total_lose
         return res
-
-    def save(self, attr, val):
-        pass
 
 
 def check_user(users, name):
@@ -119,6 +111,14 @@ def get_users():
     while True:
         name = input('Name   >> ')
         if name == 'quit' or name == 'exit':
+            break
+        if name.startswith('test'):
+            for i in range(1, int(name[-1])):
+                user = check_user(all_users, f'Test{i}')
+                user.add_bet(choice(list(check_table())), randrange(100, 1000, 100))
+                # user.add_bet(choice((list(str(i) for i in range(randint(0, 36))))+list(check_table())),
+                #              randrange(100, 1000, 100))
+                users.append(user)
             break
         user = check_user(all_users, name)
         try:
@@ -148,7 +148,7 @@ def check_table():
     a = {'nums': 0, 'black': 0, 'red': 0, 'even': 0, 'odd': 0,
          '1-row': 0, '2-row': 0, '3-row': 0,
          '1st': 0, '2nd': 0, '3rd': 0,
-         '-18': 0, '19-': 0, 0: 0}
+         '-18': 0, '19-': 0, '0': 0}
     for key in TABLE:
         for value in TABLE[key]:
             if value in a.keys():
