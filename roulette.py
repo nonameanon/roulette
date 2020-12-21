@@ -240,7 +240,7 @@ def main_menu():
     if choice == 1:
         game()
     elif choice == 2:
-        print('WIP')
+        db.sql_shell()
         main_menu()
     elif choice == 3:
         quit()

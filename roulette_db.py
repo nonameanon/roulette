@@ -90,4 +90,25 @@ def update_value(name, attr, value):
         c.execute(f"UPDATE users SET {attr} = {attr} + {value} WHERE Name = '{name}'")
 
 
+def sql_shell():
+    while True:
+        command = input('SQL >> ')
+        if command.startswith('fetch'):
+            command = command.split(' ')
+            if command[0] == 'fetchall':
+                if len(command) > 1:
+                    print(c.fetchall()[int(command[1])])
+                else:
+                    for line in c.fetchall():
+                        print(line)
+            elif command[0] == 'fetchone':
+                print(c.fetchone())
+        elif command.startswith('commit'):
+            db.commit()
+        elif command == 'quit':
+            return
+        else:
+            c.execute(f'{command}')
+
+
 # c.execute(f"UPDATE users SET MoneyBetted = MoneyBetted + {user.total_lose}, MoneyWon = MoneyWon + {user.total_wins}")
